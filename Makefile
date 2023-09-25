@@ -14,6 +14,11 @@ CMAKE_BUILD_TYPE ?= Debug
 CMAKE_FLAGS := -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE)
 # Extra CMake flags which extend the default set
 CMAKE_EXTRA_FLAGS ?=
+
+# Guile flags
+GUILE_FLAGS=$(shell pkg-config --cflags guile-3.0)
+GUILE_LIBS=$(shell pkg-config --libs guile-3.0)
+
 NVIM_PRG := $(MAKEFILE_DIR)/build/bin/nvim
 
 # CMAKE_INSTALL_PREFIX

@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <uv.h>
+#include <libguile.h>
 
 #include "nvim/api/private/defs.h"
 #include "nvim/api/private/helpers.h"
@@ -30,6 +31,7 @@
 #include "nvim/getchar.h"
 #include "nvim/gettext.h"
 #include "nvim/globals.h"
+#include "nvim/guile/executor.h"
 #include "nvim/lua/executor.h"
 #include "nvim/macros.h"
 #include "nvim/map.h"
@@ -47,7 +49,6 @@
 #include "nvim/strings.h"
 #include "nvim/usercmd.h"
 #include "nvim/vim.h"
-
 /// Structure used to store info for each sourced file.
 /// It is shared between do_source() and getsourceline().
 /// This is required, because it needs to be handed to do_cmdline() and
@@ -2149,6 +2150,9 @@ int do_source(char *fname, int check_other, int is_vimrc, int *ret_sid)
     // Source the file as lua
     nlua_exec_file(fname_exp);
     current_sctx = current_sctx_backup;
+  } else if (path_with_extension(fname_exp, "scm")) {
+    // Source the file as guile
+    scm_with_guile(guile_primitive_load, fname_exp)
   } else {
     // Read the first line so we can check for a UTF-8 BOM.
     firstline = (uint8_t *)getsourceline(0, (void *)&cookie, 0, true);
