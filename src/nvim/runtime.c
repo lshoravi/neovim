@@ -2152,7 +2152,7 @@ int do_source(char *fname, int check_other, int is_vimrc, int *ret_sid)
     current_sctx = current_sctx_backup;
   } else if (path_with_extension(fname_exp, "scm")) {
     // Source the file as guile
-    scm_with_guile(guile_primitive_load, fname_exp)
+    scm_with_guile(guile_primitive_load, fname_exp);
   } else {
     // Read the first line so we can check for a UTF-8 BOM.
     firstline = (uint8_t *)getsourceline(0, (void *)&cookie, 0, true);

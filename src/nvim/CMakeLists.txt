@@ -70,6 +70,26 @@ if(ENABLE_IWYU)
   target_compile_definitions(main_lib INTERFACE EXITFREE)
 endif()
 
+option(ENABLE_GUILE "Enable guile" ON)
+if(ENABLE_GUILE)
+  set(GUILE_DIR "/opt/homebrew/Cellar/guile/3.0.9/include/guile/3.0")
+  set(OPT_DIR "/opt/homebrew/opt/gmp")
+  set(OPT_INCLUDE_DIR "/opt/homebrew/opt/gmp/include")
+  set(READLINE_INCLUDE_DIR "/opt/homebrew/opt/readline/include")
+  set(GC_INCLUDE_DIR "/opt/homebrew/opt/bdw-gc/include")
+  set(GUILE_LIB "/opt/homebrew/Cellar/guile/3.0.9/lib")
+  set(GC_LIB "/opt/homebrew/opt/bdw-gc/lib")
+  set(GUILE_LINK "guile-3.0")
+  target_include_directories(nvim INTERFACE ${GUILE_DIR})
+  target_include_directories(nvim INTERFACE ${OPT_DIR})
+  target_include_directories(nvim INTERFACE ${OPT_INCLUDE_DIR})
+  target_include_directories(nvim INTERFACE ${READLINE_INCLUDE_DIR})
+  target_include_directories(nvim INTERFACE ${GC_INCLUDE_DIR})
+  target_link_directories(main_lib INTERFACE ${GC_LIB})
+  target_link_libraries(main_lib INTERFACE ${GUILE_LINK})
+  target_link_directories(main_lib INTERFACE ${GUILE_LIB})
+endif()
+
 if(MSVC)
   target_compile_options(main_lib INTERFACE -W3)
 
@@ -313,6 +333,7 @@ foreach(subdir
         event
         eval
         lua
+        guile
         viml
         viml/parser
        )
